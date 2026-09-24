@@ -1,0 +1,2011 @@
+{
+  "name": "ApiGateway-240823",
+  "nodes": [
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"erro\": {\n    \"codigo\": 401,\n    \"mensagem\": \"sem x-api-key ou invalida\",\n    \"servico\": \"catalogo\"\n  }\n}",
+        "options": {
+          "responseCode": 401
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1296,
+        1008
+      ],
+      "id": "c588ebcc-8e9b-43c4-8745-f62376a00426",
+      "name": "401"
+    },
+    {
+      "parameters": {
+        "options": {
+          "responseCode": 503
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1760,
+        1008
+      ],
+      "id": "423dc65f-9e4b-4afb-adfd-b525705a296b",
+      "name": "503"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "key": "gateway26/v1/health",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        -768,
+        160
+      ],
+      "id": "9a953cc9-ae50-4f0b-aac7-cf674aca5623",
+      "name": "Renan",
+      "credentials": {
+        "redis": {
+          "id": "w9WQ3DhFMWgEdN0w",
+          "name": "Redis account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://pzaas.online/webhook/turmaa12/v1/menu",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "turma2026"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          },
+          "timeout": 40000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        1488,
+        832
+      ],
+      "id": "d0f12d79-0cc9-430a-b7a4-276dfaa1e7f6",
+      "name": "HTTP Request",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "gateway26/v1/pagamento",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -976,
+        944
+      ],
+      "id": "6d230df4-82a2-4d24-aea6-bfe8b8881785",
+      "name": "pagamento",
+      "webhookId": "3b60d1a2-5606-47ea-8cd1-6bc881a547b7"
+    },
+    {
+      "parameters": {
+        "path": "gateway26/v1/health",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -960,
+        160
+      ],
+      "id": "b3e886f5-67a6-43cf-8f4f-a2a8da7b0862",
+      "name": "health1",
+      "webhookId": "3b60d1a2-5606-47ea-8cd1-6bc881a547b7"
+    },
+    {
+      "parameters": {
+        "path": "gateway26/v1/catalogo",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        576,
+        1024
+      ],
+      "id": "96b1ea0e-3467-4150-8616-b38cd2ac6d33",
+      "name": "catalogo",
+      "webhookId": "3b60d1a2-5606-47ea-8cd1-6bc881a547b7"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "gateway26/v1/orquestrador",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        2016,
+        912
+      ],
+      "id": "717a9d32-8eb0-4d3d-b455-38e6e9776da1",
+      "name": "orquestrador",
+      "webhookId": "3b60d1a2-5606-47ea-8cd1-6bc881a547b7"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json.body }}",
+        "options": {
+          "responseCode": "={{ $json.statusCode }}",
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1696,
+        816
+      ],
+      "id": "6037e255-8976-4917-9adf-04f584938edc",
+      "name": "Respond to Webhook2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "62784f63-ac63-4691-b35f-0534d0e2dff4",
+              "leftValue": "={{ $('catalogo').item.json.headers['x-api-key'] }}",
+              "rightValue": "turma2026",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1136,
+        912
+      ],
+      "id": "08b35bea-cd24-4acf-a078-b41c5a3428ac",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"erro\": {\n    \"codigo\": 503,\n    \"mensagem\": \"servico catalogo indisponivel apos retries\",\n    \"servico\": \"catalogo\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1616,
+        1008
+      ],
+      "id": "a7e03028-0f66-4a2d-89c4-725200b9a5db",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://pzaas.online/webhook/v1/turmaa21_Pagamento/fluxo",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-api-key",
+              "value": "turma2026"
+            },
+            {
+              "name": "x-pedido-id",
+              "value": "={{ $('pagamento').item.json.body.pedido_id }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($('pagamento').item.json.body) }}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          },
+          "timeout": 40000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        -128,
+        896
+      ],
+      "id": "1cf7551f-242b-477e-bbcd-fb19ac564d72",
+      "name": "HTTP Request1",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json.body }}",
+        "options": {
+          "responseCode": "={{ $json.statusCode }}",
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        272,
+        816
+      ],
+      "id": "d19a64a9-1c7f-4a08-9451-6136cf19fe4a",
+      "name": "Respond to Webhook5"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "62784f63-ac63-4691-b35f-0534d0e2dff4",
+              "leftValue": "={{ $('pagamento').item.json.headers['x-api-key'] }}",
+              "rightValue": "turma2026",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -496,
+        864
+      ],
+      "id": "e07060ac-e72f-4249-a3cd-5a8d2e236fc2",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"erro\": {\n    \"codigo\": 401,\n    \"mensagem\": \"sem x-api-key ou invalida\",\n    \"servico\": \"pagamento\"\n  }\n}",
+        "options": {
+          "responseCode": 401
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -336,
+        1008
+      ],
+      "id": "dd35032e-5a41-418e-9722-831bf33154f4",
+      "name": "Respond to Webhook6"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://pzaas.online/webhook/Chaos_Monkey-240022-240120",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-api-key",
+              "value": "turma2026"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 20000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        -336,
+        816
+      ],
+      "id": "5665f02d-ec3c-45cf-a005-b6775f462d43",
+      "name": "HTTP Request4",
+      "executeOnce": false,
+      "alwaysOutputData": false,
+      "retryOnFail": true,
+      "waitBetweenTries": 1000,
+      "notesInFlow": false,
+      "maxTries": 3,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"erro\": {\n    \"codigo\": 503,\n    \"mensagem\": \"chaos monkey indisponivel apos retries\",\n    \"servico\": \"pagamento\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -160,
+        1200
+      ],
+      "id": "416eea57-40c1-4e9f-9f63-d7260cd86743",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "options": {
+          "responseCode": 503
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        64,
+        1264
+      ],
+      "id": "93019b58-0a44-4f7a-9067-4014627b3636",
+      "name": "Respond to Webhook7"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://pzaas.online/webhook/turmaa07/v1/pedidos",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-api-key",
+              "value": "turma2026"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $('orquestrador').item.json.body }}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          },
+          "timeout": 40000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        2912,
+        784
+      ],
+      "id": "01db9076-b693-482a-bd17-65cb53f8e036",
+      "name": "HTTP Request2",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json.body }}",
+        "options": {
+          "responseCode": "={{ $json.statusCode }}"
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        3104,
+        752
+      ],
+      "id": "d5a07b5a-461d-48ef-ac03-424e443fee58",
+      "name": "Respond to Webhook8"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "62784f63-ac63-4691-b35f-0534d0e2dff4",
+              "leftValue": "={{ $('orquestrador').item.json.headers['x-api-key'] }}",
+              "rightValue": "turma2026",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2496,
+        832
+      ],
+      "id": "1678fe67-a8d3-460d-9046-820cfa30c9a7",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://pzaas.online/webhook/Chaos_Monkey-240022-240120",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-api-key",
+              "value": "turma2026"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 20000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        2688,
+        816
+      ],
+      "id": "6386e617-8e33-4651-9607-8aefe6f29e7b",
+      "name": "HTTP Request5",
+      "executeOnce": false,
+      "alwaysOutputData": false,
+      "retryOnFail": true,
+      "waitBetweenTries": 1000,
+      "notesInFlow": false,
+      "maxTries": 3,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"erro\": {\n    \"codigo\": 503,\n    \"mensagem\": \"servico orquestrador indisponivel apos retries\",\n    \"servico\": \"orquestrador\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        3072,
+        912
+      ],
+      "id": "35c874b7-b31f-47e1-9dd8-50c206223983",
+      "name": "Edit Fields4"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"status\": \"{{ $json.propertyName }}\",\n  \"servico\": \"api-gateway\",\n  \"versao\": \"v1\",\n  \"uptimeCheck\": \"{{ $now }}\",\n  \"endpoints\": [\n    \"/gateway26/v1/health\",\n    \"/gateway26/v1/catalogo\",\n    \"/gateway26/v1/orquestrador\",\n    \"/gateway26/v1/status\",\n    \"/gateway26/v1/pagamento\",\n    \"/gateway26/v1/setHealth\"\n  ]\n}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -608,
+        160
+      ],
+      "id": "ee7a8eea-6421-4a90-bd89-62873954a9af",
+      "name": "health-respond"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://pzaas.online/webhook/Chaos_Monkey-240022-240120",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-api-key",
+              "value": "turma2026"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 20000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        1312,
+        848
+      ],
+      "id": "fe259f43-f1be-4018-a345-db2a253dda4e",
+      "name": "Request Chaosmonkey",
+      "executeOnce": false,
+      "alwaysOutputData": false,
+      "retryOnFail": true,
+      "waitBetweenTries": 1000,
+      "notesInFlow": false,
+      "maxTries": 3,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "path": "gateway26/v1/status",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        2080,
+        336
+      ],
+      "id": "62f74abd-7ba1-4688-bd5b-2c1503a1fbe3",
+      "name": "status",
+      "webhookId": "69920e4a-5fe9-456a-a103-71e5192a1da4"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json.body }}",
+        "options": {
+          "responseCode": "={{ $json.statusCode }}",
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        3024,
+        128
+      ],
+      "id": "04b5e836-9154-416a-8590-1a05bed6eb67",
+      "name": "Respond to Webhook3"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"erro\": {\n    \"codigo\": 401,\n    \"mensagem\": \"sem x-api-key ou invalida\",\n    \"servico\": \"status\"\n  }\n}",
+        "options": {
+          "responseCode": 401
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2816,
+        464
+      ],
+      "id": "72bb74e0-3d09-479d-9f03-edb86ade3942",
+      "name": "Respond to Webhook16"
+    },
+    {
+      "parameters": {
+        "options": {
+          "responseCode": 503
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        3264,
+        912
+      ],
+      "id": "2dce74c7-b700-4188-be53-f481b0dd3645",
+      "name": "Respond to Webhook17"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "3294f614-abc6-4958-baf2-8dc560987bb1",
+              "leftValue": "={{$('status').item.json.headers['x-api-key']}}",
+              "rightValue": "turma2026",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2576,
+        144
+      ],
+      "id": "40205d2e-d16b-45fd-8579-079f52f069ca",
+      "name": "If6"
+    },
+    {
+      "parameters": {
+        "url": "={{ 'https://pzaas.online/webhook/7ec9887b-94d4-4b86-94ad-38c44211fd75/turmaa07/v1/pedidos/' + $('status').item.json.query.pedidoId + '/status' }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "turma2026"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          },
+          "timeout": 15000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        2768,
+        144
+      ],
+      "id": "af9453ef-cc63-4296-8abd-f3f6c2e88788",
+      "name": "HTTP Request-status pedido",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"servico\": \"api-gateway\",\n  \"health\": \"true\",\n  \"mensagem\": \"servico marcado como disponivel\"\n}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -64,
+        432
+      ],
+      "id": "760436bf-8936-4610-b706-ec99db4a78b8",
+      "name": "Respond to Webhook10"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"servico\": \"api-gateway\",\n  \"health\": \"false\",\n  \"mensagem\": \"servico marcado como indisponivel\"\n}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -64,
+        240
+      ],
+      "id": "96959bed-6279-4df6-aed5-f0dcae4e0998",
+      "name": "Respond to Webhook14"
+    },
+    {
+      "parameters": {
+        "operation": "set",
+        "key": "gateway26/v1/health",
+        "value": "true"
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        432
+      ],
+      "id": "fb7795d5-5851-4bd9-a042-21d513573094",
+      "name": "vivo",
+      "credentials": {
+        "redis": {
+          "id": "w9WQ3DhFMWgEdN0w",
+          "name": "Redis account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "set",
+        "key": "gateway26/v1/health",
+        "value": "false"
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        240
+      ],
+      "id": "d6a57c90-b777-472d-b98d-e25c0d68c03c",
+      "name": "morto",
+      "credentials": {
+        "redis": {
+          "id": "w9WQ3DhFMWgEdN0w",
+          "name": "Redis account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "path": "gateway26/v1/setHealth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -960,
+        320
+      ],
+      "id": "1e2745be-7460-43fb-a14d-b02a987f05f6",
+      "name": "sethealth",
+      "webhookId": "4e985602-8323-47a8-8aa3-c188420d82fb"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "key": "gateway26/v1/health",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        -608,
+        288
+      ],
+      "id": "89dd81e3-7f8d-4ae1-9115-fc692e8b1100",
+      "name": "Get Health Atual",
+      "credentials": {
+        "redis": {
+          "id": "w9WQ3DhFMWgEdN0w",
+          "name": "Redis account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "b2c3d4e5-2222-4b6c-9d7e-0f1a2b3c4d5e",
+              "leftValue": "={{ $json.propertyName }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -400,
+        352
+      ],
+      "id": "61747265-b369-4b25-b214-b8321ce49721",
+      "name": "If Toggle Health"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "d4e5f6a7-4444-4d8e-9f0a-2b3c4d5e6f7a",
+              "leftValue": "={{ $('sethealth').item.json.headers['x-api-key'] }}",
+              "rightValue": "turma2026",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -768,
+        320
+      ],
+      "id": "c3d28bf5-8851-463b-9e9e-6f09662d0d20",
+      "name": "If Auth SetHealth"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"erro\": {\n    \"codigo\": 401,\n    \"mensagem\": \"sem x-api-key ou invalida\",\n    \"servico\": \"setHealth\"\n  }\n}",
+        "options": {
+          "responseCode": 401
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -608,
+        432
+      ],
+      "id": "6827bd7b-3108-415d-99b0-ec3b586fef3a",
+      "name": "Respond to Webhook20"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"erro\": {\n    \"codigo\": 503,\n    \"mensagem\": \"servico orquestrador indisponivel apos retries\",\n    \"servico\": \"status\"\n  }\n}",
+        "options": {
+          "responseCode": 503
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        3040,
+        272
+      ],
+      "id": "b84adac8-da4b-4782-a4e1-c4f2b6c6c4da",
+      "name": "Respond to Webhook19"
+    },
+    {
+      "parameters": {
+        "content": "## CATALOGO",
+        "height": 704,
+        "width": 1440,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        496,
+        736
+      ],
+      "typeVersion": 1,
+      "id": "0c6ac672-d3dd-41a9-831c-e1b6a0d88a07",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## PAGAMENTO \n",
+        "height": 704,
+        "width": 1488,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1024,
+        736
+      ],
+      "typeVersion": 1,
+      "id": "9719dcde-9fdc-4c1e-990b-310fa09704df",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## HEALTH E SET HEALTH \n",
+        "height": 640,
+        "width": 1456,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -992,
+        64
+      ],
+      "typeVersion": 1,
+      "id": "1acb3fac-4d9f-44c2-bf9c-409386b3f583",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## STATUS\n",
+        "height": 640,
+        "width": 1424,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1968,
+        64
+      ],
+      "typeVersion": 1,
+      "id": "299d4c65-93f9-49c0-9b1a-1a96489ed4a4",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## ORQUESTRADOR ",
+        "height": 688,
+        "width": 1424,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1968,
+        752
+      ],
+      "typeVersion": 1,
+      "id": "34edb6ce-ce4c-4d5c-95ac-d6d1f6075ace",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"erro\": {\n    \"codigo\": 401,\n    \"mensagem\": \"sem x-api-key ou invalida\",\n    \"servico\": \"orquestrador\"\n  }\n}",
+        "options": {
+          "responseCode": 401
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2672,
+        1008
+      ],
+      "id": "e1ca5008-2e09-41cb-b7f8-98b14c8de61f",
+      "name": "401 ORQUESTRADOR"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"erro\": {\n    \"codigo\": 503,\n    \"mensagem\": \"pagamento indisponivel apos retries e fallback A->B\",\n    \"servico\": \"pagamento\"\n  }\n}",
+        "options": {
+          "responseCode": 503
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        272,
+        1088
+      ],
+      "id": "1ce2fd11-ca59-4491-9524-79508e0ffb6d",
+      "name": "503 PAGAMENTO"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://pzaas.online/webhook/Pagamento8413/v1/PagamentoFinal",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-api-key",
+              "value": "turma2026"
+            },
+            {
+              "name": "x-pedido-id",
+              "value": "={{ $('pagamento').item.json.body.pedido_id }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ pedidoId: $('pagamento').item.json.body.pedido_id, valor: $('pagamento').item.json.body.valor, aprovado: $('pagamento').item.json.body.saldo_cliente >= $('pagamento').item.json.body.valor }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          },
+          "timeout": 20000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        80,
+        992
+      ],
+      "id": "99af0760-26a0-46c3-b66d-72c640f0837d",
+      "name": "PAGAMENTO B (fallback)",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 1000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "key": "gateway26/v1/health",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        768,
+        1040
+      ],
+      "id": "38009894-bc68-45c1-9906-2382b436a95e",
+      "name": "Health Check catalogo",
+      "credentials": {
+        "redis": {
+          "id": "w9WQ3DhFMWgEdN0w",
+          "name": "Redis account 3"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "bbbb0222-2222-4b2c-9d3e-4f5a6b7c8d90",
+              "leftValue": "={{ $json.propertyName }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        976,
+        992
+      ],
+      "id": "5110dd9d-6852-4562-8a0a-99ae8ef9fec3",
+      "name": "If Health catalogo"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"erro\": {\n    \"codigo\": 503,\n    \"mensagem\": \"health = false, gateway indisponivel\",\n    \"servico\": \"catalogo\"\n  }\n}",
+        "options": {
+          "responseCode": 503
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1120,
+        1232
+      ],
+      "id": "a40884a3-a3d2-43ce-80d8-e7327284887a",
+      "name": "503 HEALTH catalogo"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "key": "gateway26/v1/health",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        -816,
+        944
+      ],
+      "id": "6f77a623-bf29-449d-9823-fd23adaed29a",
+      "name": "Health Check pagamento",
+      "credentials": {
+        "redis": {
+          "id": "w9WQ3DhFMWgEdN0w",
+          "name": "Redis account 3"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "bbbb1222-2222-4b2c-9d3e-4f5a6b7c8d91",
+              "leftValue": "={{ $json.propertyName }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -656,
+        944
+      ],
+      "id": "e1fce5ad-d70c-4be2-b519-4a51df0cd883",
+      "name": "If Health pagamento"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"erro\": {\n    \"codigo\": 503,\n    \"mensagem\": \"health = false, gateway indisponivel\",\n    \"servico\": \"pagamento\"\n  }\n}",
+        "options": {
+          "responseCode": 503
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -496,
+        1232
+      ],
+      "id": "eccc73a6-0902-42a6-8fc6-10b4a96e85f3",
+      "name": "503 HEALTH pagamento"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "key": "gateway26/v1/health",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        2176,
+        912
+      ],
+      "id": "2b95e83c-12e2-4126-9a06-5c1b4bd2721f",
+      "name": "Health Check orquestrador",
+      "credentials": {
+        "redis": {
+          "id": "w9WQ3DhFMWgEdN0w",
+          "name": "Redis account 3"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "bbbb2222-2222-4b2c-9d3e-4f5a6b7c8d92",
+              "leftValue": "={{ $json.propertyName }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2336,
+        912
+      ],
+      "id": "8194da01-a745-477f-b6c6-aa46dd106cfa",
+      "name": "If Health orquestrador"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"erro\": {\n    \"codigo\": 503,\n    \"mensagem\": \"health = false, gateway indisponivel\",\n    \"servico\": \"orquestrador\"\n  }\n}",
+        "options": {
+          "responseCode": 503
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2496,
+        1104
+      ],
+      "id": "a1c0907b-fc1f-4a46-9386-8cad38ea8116",
+      "name": "503 HEALTH orquestrador"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "key": "gateway26/v1/health",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        2256,
+        336
+      ],
+      "id": "dd0240d3-76b1-4c2f-b93c-cbc2c20360ee",
+      "name": "Health Check status",
+      "credentials": {
+        "redis": {
+          "id": "w9WQ3DhFMWgEdN0w",
+          "name": "Redis account 3"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "bbbb3222-2222-4b2c-9d3e-4f5a6b7c8d93",
+              "leftValue": "={{ $json.propertyName }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2416,
+        224
+      ],
+      "id": "3e06d21e-ee37-40aa-aeff-d8d49475d583",
+      "name": "If Health status"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"erro\": {\n    \"codigo\": 503,\n    \"mensagem\": \"health = false, gateway indisponivel\",\n    \"servico\": \"status\"\n  }\n}",
+        "options": {
+          "responseCode": 503
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2592,
+        464
+      ],
+      "id": "33e5c53f-8698-475b-beb1-7105c526cc7a",
+      "name": "503 HEALTH status"
+    },
+    {
+      "parameters": {
+        "content": "## Documentacao\n\nIntegrados: Catalogo (turmaa12), Orquestrador (turmaa07), Chaos Monkey.\n\nFalta apenas a URL real do PAGAMENTO no no 'HTTP Request1'.\n\nTodas as rotas exigem x-api-key, exceto /v1/health.\n\nDOCUMENTAÇÃO:\nhttps://apigateway-doc.vercel.app/",
+        "height": 416,
+        "width": 960,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        768,
+        272
+      ],
+      "id": "abaa0e3a-b47e-4b51-803d-63bb53670173",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Renan": {
+      "main": [
+        [
+          {
+            "node": "health-respond",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "pagamento": {
+      "main": [
+        [
+          {
+            "node": "Health Check pagamento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "health1": {
+      "main": [
+        [
+          {
+            "node": "Renan",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "catalogo": {
+      "main": [
+        [
+          {
+            "node": "Health Check catalogo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "orquestrador": {
+      "main": [
+        [
+          {
+            "node": "Health Check orquestrador",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Request Chaosmonkey",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "401",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "503",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook5",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "PAGAMENTO B (fallback)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request4": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook8",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request5",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "401 ORQUESTRADOR",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields4": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook17",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Request Chaosmonkey": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "status": {
+      "main": [
+        [
+          {
+            "node": "Health Check status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If6": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request-status pedido",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook16",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request-status pedido": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook19",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "vivo": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook10",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "morto": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook14",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "sethealth": {
+      "main": [
+        [
+          {
+            "node": "If Auth SetHealth",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Health Atual": {
+      "main": [
+        [
+          {
+            "node": "If Toggle Health",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Toggle Health": {
+      "main": [
+        [
+          {
+            "node": "morto",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "vivo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Auth SetHealth": {
+      "main": [
+        [
+          {
+            "node": "Get Health Atual",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook20",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request5": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PAGAMENTO B (fallback)": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook5",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "503 PAGAMENTO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Health Check catalogo": {
+      "main": [
+        [
+          {
+            "node": "If Health catalogo",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "503 HEALTH catalogo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Health catalogo": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "503 HEALTH catalogo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Health Check pagamento": {
+      "main": [
+        [
+          {
+            "node": "If Health pagamento",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "503 HEALTH pagamento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Health pagamento": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "503 HEALTH pagamento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Health Check orquestrador": {
+      "main": [
+        [
+          {
+            "node": "If Health orquestrador",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "503 HEALTH orquestrador",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Health orquestrador": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "503 HEALTH orquestrador",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Health Check status": {
+      "main": [
+        [
+          {
+            "node": "If Health status",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "503 HEALTH status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Health status": {
+      "main": [
+        [
+          {
+            "node": "If6",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "503 HEALTH status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "cfa2c746-f445-4d20-a1e5-52b3a9695048",
+  "meta": {
+    "instanceId": "8a5832cfccebf1f6e4152d67714b8a9e39672100660b3961e0850a37e9a65b24"
+  },
+  "nodeGroups": [],
+  "id": "WbqzLHPqRUh49SUh",
+  "tags": []
+}
