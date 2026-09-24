@@ -169,15 +169,6 @@ Pontos conhecidos que ainda não foram implementados, listados aqui de propósit
 
 ---
 
-## Estrutura
-
-```
-.
-├── README.md
-└── src/
-    └── ApiGateway-240823.json    # workflow do n8n (62 nós)
-```
-
 ---
 
 **Renan Hideki** · RA 240823
